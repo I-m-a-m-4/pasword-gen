@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Generate strong and secure passwords with our Password Generator. Check the strength of your passwords and customize their length.">
+    <meta name="keywords" content="Password, Generator, Secure, Strong, Customize, Copy, Strength Checker">
+    <meta name="author" content="Your Name">
+    <title>Secure Password Generator with Strength Checker</title>
+    <style>
+      body {
+        background: linear-gradient(135deg, #141414, #1a1a1a, #1f1f1f, #1a1a1a, #141414);
+        background-size: 400% 400%;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        animation: backgroundAnimation 10s ease infinite;
+      }
+
+      @keyframes backgroundAnimation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      h1 {
+        color: #ff69b4;
+        font-size: 36px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      #randPass {
+        text-align: center;
+        color: #32cd32;
+        font-size: 24px;
+        font-weight: bold;
+        background-color: #2c2c2c;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        width: 80%;
+        max-width: 500px;
+      }
+
+      button {
+        background-color: #000000;
+        color: #ffffff;
+        border: 2px solid;
+        border-image-slice: 1;
+        border-image-source: linear-gradient(to left, #32cd32, #ff69b4);
+        padding: 15px 30px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 10px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #2c2c2c;
+        transform: scale(1.05);
+      }
+
+      input {
+        width: 80%;
+        max-width: 500px;
+        padding: 15px;
+        border: 2px solid #ff69b4;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #ffffff;
+        background-color: #000000;
+        box-sizing: border-box;
+      }
+
+      label {
+        color: #ff69b4;
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: block;
+        text-align: center;
+      }
+
+      #strengthIndicator {
+        width: 80%;
+        max-width: 500px;
+        height: 20px;
+        border-radius: 5px;
+        margin: 20px auto;
+        background-color: #2c2c2c;
+        display: flex;
+        overflow: hidden;
+      }
+
+      #strengthIndicator div {
+        height: 100%;
+        transition: width 0.3s ease;
+      }
+
+      #weak {
+        background-color: #ff4b4b;
+      }
+
+      #medium {
+        background-color: #ffd700;
+      }
+
+      #strong {
+        background-color: #32cd32;
+      }
+
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .footer a {
+        color: #ff69b4;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media screen and (max-width: 768px) {
+        h1 {
+          font-size: 28px;
+        }
+
+        #randPass {
+          font-size: 20px;
+        }
+
+        button {
+          padding: 12px 24px;
+          font-size: 14px;
+        }
+
+        input {
+          padding: 12px;
+          font-size: 14px;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        h1 {
+          font-size: 24px;
+        }
+
+        #randPass {
+          font-size: 18px;
+        }
+
+        button {
+          padding: 10px 20px;
+          font-size: 12px;
+        }
+
+        input {
+          padding: 10px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Password Generator</h1>
+    <p id="randPass">Your Password Will Appear Here</p>
+
+    <label for="length">Password Length:</label>
+    <input id="length" type="number" min="1" max="128" value="64" />
+
+    <button id="generate">Generate Password</button>
+    <button id="copy">Copy Password</button>
+
+    <div id="strengthIndicator">
+      <div id="weak" style="width: 0%;"></div>
+      <div id="medium" style="width: 0%;"></div>
+      <div id="strong" style="width: 0%;"></div>
+    </div>
+
+    <div class="footer">
+      <p>Follow me on <a href="https://www.instagram.com/devbime" target="_blank">Instagram</a></p>
+    </div>
+
+    <script>
+      let genBtn = document.getElementById("generate");
+      let randPass = document.getElementById("randPass");
+      let lengthInput = document.getElementById("length");
+      let copy = document.getElementById("copy");
+      let weakIndicator = document.getElementById("weak");
+      let mediumIndicator = document.getElementById("medium");
+      let strongIndicator = document.getElementById("strong");
+
+      class Password {
+        constructor() {
+          this.char = "1234567890-+=_!£$%^*()qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXC@VBNM@#";
+        }
+
+        getRandomPassword(length) {
+          let password = "";
+          for (let i = 0; i < length; i++) {
+            const randChar = Math.floor(Math.random() * this.char.length);
+            password += this.char[randChar];
+          }
+          randPass.textContent = password;
+          this.checkStrength(password);
+        }
+
+        checkStrength(password) {
+          const lengthCriteria = password.length >= 12;
+          const upperLowerCriteria = /[a-z]/.test(password) && /[A-Z]/.test(password);
+          const numberCriteria = /[0-9]/.test(password);
+          const specialCharCriteria = /[-+=_!£$%^*()@#]/.test(password);
+
+          let strength = 0;
+
+          if (lengthCriteria) strength++;
+          if (upperLowerCriteria) strength++;
+          if (numberCriteria) strength++;
+          if (specialCharCriteria) strength++;
+
+          this.updateStrengthIndicator(strength);
+        }
+
+        updateStrengthIndicator(strength) {
+          let weakWidth = 0, mediumWidth = 0, strongWidth = 0;
+
+          if (strength === 1) {
+            weakWidth = 100;
+          } else if (strength === 2) {
+            weakWidth = 100;
+            mediumWidth = 50;
+          } else if (strength === 3) {
+            weakWidth = 100;
+            mediumWidth = 100;
+            strongWidth = 75;
+          } else if (strength === 4) {
+            weakWidth = 100;
+            mediumWidth = 100;
+            strongWidth = 100;
+          }
+
+          weakIndicator.style.width = weakWidth + "%";
+          mediumIndicator.style.width = mediumWidth + "%";
+          strongIndicator.style.width = strongWidth + "%";
+        }
+
+        copy() {
+          const textArea = document.createElement("textarea");
+          textArea.value = randPass.textContent;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+        }
+      }
+
+      const password = new Password();
+
+      genBtn.addEventListener("click", () => {
+        const length = parseInt(lengthInput.value, 10);
+        password.getRandomPassword(length);
+      });
+
+      copy.addEventListener("click", () => {
+        password.copy();
+      });
+    </script>
+  </body>
+</html>
